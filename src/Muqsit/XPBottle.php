@@ -36,27 +36,36 @@ class XPBottle extends PluginBase implements Listener{
     $currentExp = $player->getExp();
     if($currentExp >= $exp){
       $player->setExp($currentExp - $exp);
-      $player->getInventory()->addItem(Item::get(384,$exp,1));
+      $xpBottle = Item::get(384,$exp,1);
+      $xpBottle->setCustomName(TF::GREEN.TF::BOLD.$player->getName()."'s Experience Bottle\n".TF::PURPLE."Value: ".TF::WHITE.$exp);
+      $player->getInventory()->addItem($xpBottle);
       $player->sendMessage(TF::GREEN.TF::BOLD."XPBottle ".TF::RESET.TF::GREEN."You have successfully redeemed ".TF::YELLOW.$exp.TF::GREEN.".");
     }else{
       $player->sendMessage(TF::RED.TF::BOLD."XPBottle ".TF::RESET.TF::RED."You don't have enough experience. Your current experience is ".TF::YELLOW.$currentExp);
     }
   }
   
+  public function onInteract(PlayerInteractEvent $e){
+    $p = $e->getPlayer();
+    if($e->getItem()->getId() === 384 && $e->getItem()->getDamage() > 0){
+      $p->addExperience($e->getItem()->getDamage());
+    }
+  }
+  
   public function onCommand(CommandSender $sender, Command $cmd, $label, array $args){
+    if(!$sender instanceof Player) return;
     switch(strtolower($cmd->getName())){
       case "exp":
         $sender->sendMessage(TF::GREEN.TF::BOLD."XPBottle ".TF::RESET.TF::GREEN."You have ".TF::YELLOW.$sender->getExp()." XP".TF::GREEN." with you right now.");
       break;
-      case "xpbottle"
+      case "xpbottle":
         if(!$sender->hasPermission("redeem.exp")) return;
-        if(!isset($args[0])) $sender->sendMessage(TF::YELLOW."/xpbottle <amount>");
+        if(!isset($args[0])) $sender->sendMessage(TF::YELLOW."/xpbottle <amount>\n".TF::GRAY."Check your current experience using the command ".TF::YELLOW."/exp");
         if(isset($args[0])){
-          if(($args[0]) is_numeric) $this->redeemExp($sender, $args[0]);
+          if(is_numeric($args[0])) $this->redeemExp($sender, $args[0]);
           else $sender->sendMessage(TF::RED.TF::BOLD."XPBottle ".TF::RESET.TF::RED."You have provided an invalid amount.");
         }
       break;
     }
   }
 }
-        
