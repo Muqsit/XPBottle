@@ -1,0 +1,10 @@
+name: RedeemableXP
+api: 2.0.0
+main: Muqsit\Main
+version: 1.0
+commands:
+  xpbottle:
+    description: Redeem XP into XP Bottles.
+permission:
+  redeem.exp:
+    default: true
