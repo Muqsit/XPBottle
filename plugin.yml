@@ -1,6 +1,6 @@
-name: RedeemableXP
+name: XPBottle
 api: 2.0.0
-main: Muqsit\Main
+main: Muqsit\XPBottle
 version: 1.0
 commands:
   xpbottle:
