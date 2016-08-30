@@ -9,7 +9,6 @@
 *  / /\ \| |    | |__)  ) |_| | |_| |__| ( (/ / 
 * /_/  \_\_|    |______/ \___/ \___)___)_|\____)
 *
-*
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU Lesser General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
@@ -33,23 +32,23 @@ class XPBottle extends PluginBase implements Listener{
     $this->getServer()->getPluginManager()->registerEvents($this, $this);
   }
 
-	public function preventCrashes(PlayerJoinEvent $e){//This will be removed when MCPE fixes crashes caused by meta over 32000
-		$p = $e->getPlayer();
-		foreach($p->getInventory()->getContents() as $item){
-			if($item->getId() === 384 && $item->getDamage() >= 32000){
-				$p->sendMessage(TF::BOLD.TF::RED."(!) ".TF::RESET.TF::RED."An XP bottle in your inventory caused you to crash!");
-				$p->sendMessage(TF::YELLOW.TF::BOLD."(!) ".TF::RESET.TF::YELLOW."We have refunded your XP.");
-				$p->addExperience($item->getDamage());
-				$p->getInventory()->remove($item);
-			}
-		}
-	}
-
-	public function calculateExpReduction($p, $exp){
-		$xp = $p->getExp();
-		$level = $p->getExpLevel();
-		$p->setExperienceAndLevel($xp - $exp, $level);
-	}
+  public function preventCrashes(PlayerJoinEvent $e){//This will be removed when MCPE fixes crashes caused by meta over 32000
+    $p = $e->getPlayer();
+    foreach($p->getInventory()->getContents() as $item){
+      if($item->getId() === 384 && $item->getDamage() >= 32000){
+	$p->sendMessage(TF::BOLD.TF::RED."(!) ".TF::RESET.TF::RED."An XP bottle in your inventory caused you to crash!");
+	$p->sendMessage(TF::YELLOW.TF::BOLD."(!) ".TF::RESET.TF::YELLOW."We have refunded your XP.");
+	$p->addExperience($item->getDamage());
+	$p->getInventory()->remove($item);
+      }
+    }
+  }
+	
+  public function calculateExpReduction($p, $exp){
+    $xp = $p->getExp();
+    $level = $p->getExpLevel();
+    $p->setExperienceAndLevel($xp - $exp, $level);
+  }
 
   public function redeemExp($player, $exp){
     $currentExp = $player->getExp();
@@ -59,7 +58,7 @@ class XPBottle extends PluginBase implements Listener{
       $xpBottle->setCustomName(TF::RESET.TF::GREEN.TF::BOLD.$player->getName()."'s Experience Bottle".TF::RESET."\n".TF::LIGHT_PURPLE."Value: ".TF::WHITE.$exp);
       $player->getInventory()->addItem($xpBottle);
       $player->sendMessage(TF::GREEN.TF::BOLD."XPBottle ".TF::RESET.TF::GREEN."You have successfully redeemed ".TF::YELLOW.$exp.TF::GREEN.".");
-			$player->getLevel()->addSound(new ExpPickupSound($player), [$player]);
+      $player->getLevel()->addSound(new ExpPickupSound($player), [$player]);
     }else{
       $player->sendMessage(TF::RED.TF::BOLD."XPBottle ".TF::RESET.TF::RED."You don't have enough experience. Your current experience is ".TF::YELLOW.$currentExp);
     }
@@ -67,13 +66,13 @@ class XPBottle extends PluginBase implements Listener{
   
   public function onInteract(PlayerInteractEvent $e){
     $p = $e->getPlayer();
-		$i = $e->getItem();
+    $i = $e->getItem();
     if($i->getId() === 384 && $i->getDamage() > 0){
-			$i->setCount($i->getCount() - 1);
-			$p->getInventory()->setItem($p->getInventory()->getHeldItemSlot(), $i);
+      $i->setCount($i->getCount() - 1);
+      $p->getInventory()->setItem($p->getInventory()->getHeldItemSlot(), $i);
       $p->addExperience($e->getItem()->getDamage());
-			$p->getLevel()->addSound(new ExpPickupSound($p), [$p]);
-			$e->setCancelled();
+      $p->getLevel()->addSound(new ExpPickupSound($p), [$p]);
+      $e->setCancelled();
     }
   }
   
