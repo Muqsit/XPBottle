@@ -26,7 +26,7 @@ use pocketmine\event\Listener;
 use pocketmine\item\Item;
 use pocketmine\Player;
 
-class Main extends PluginBase implements Listener{
+class XPBottle extends PluginBase implements Listener{
 
   public function onEnable(){
     $this->getServer()->getPluginManager()->registerEvents($this, $this);
