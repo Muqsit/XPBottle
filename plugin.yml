@@ -5,6 +5,8 @@ version: 1.0
 commands:
   xpbottle:
     description: Redeem XP into XP Bottles.
+  exp:
+    description: Check your current experience.
 permission:
   redeem.exp:
     default: true
