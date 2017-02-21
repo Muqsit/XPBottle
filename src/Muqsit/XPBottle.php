@@ -45,13 +45,14 @@ class XPBottle extends PluginBase implements Listener{
   }
 	
   public function calculateExpReduction($p, $exp){
-    $xp = $p->getExp();
-    $level = $p->getExpLevel();
-    $p->setExperienceAndLevel($xp - $exp, $level);
+    $xp = $p->getTotalXp();
+    $level = $p->getXpLevel();
+    $p->takeXp($xp);
+    $p->takeXpLevel($level);
   }
 
   public function redeemExp($player, $exp){
-    $currentExp = $player->getExp();
+    $currentExp = $player->getTotalXp();
     if($currentExp >= $exp){
       $this->calculateExpReduction($player, $exp);
       $xpBottle = Item::get(384,$exp,1);
@@ -70,7 +71,7 @@ class XPBottle extends PluginBase implements Listener{
     if($i->getId() === 384 && $i->getDamage() > 0){
       $i->setCount($i->getCount() - 1);
       $p->getInventory()->setItem($p->getInventory()->getHeldItemSlot(), $i);
-      $p->addExperience($e->getItem()->getDamage());
+      $p->addXp($i->getDamage());
       $p->getLevel()->addSound(new ExpPickupSound($p), [$p]);
       $e->setCancelled();
     }
@@ -80,7 +81,7 @@ class XPBottle extends PluginBase implements Listener{
     if(!$sender instanceof Player) return;
     switch(strtolower($cmd->getName())){
       case "exp":
-        $sender->sendMessage(TF::GREEN.TF::BOLD."XPBottle ".TF::RESET.TF::GREEN."You have ".TF::YELLOW.$sender->getExp()." XP".TF::GREEN." with you right now.");
+        $sender->sendMessage(TF::GREEN.TF::BOLD."XPBottle ".TF::RESET.TF::GREEN."You have ".TF::YELLOW.$sender->getTotalXp()." XP".TF::GREEN." with you right now.");
       break;
       case "xpbottle":
         if(!$sender->hasPermission("redeem.exp")) return;
